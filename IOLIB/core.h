@@ -211,7 +211,7 @@ namespace io
 
 	void pause()
 	{
-#ifdef _MSC_VRT
+#ifdef _MSC_VER
 		system("pause");
 		return;
 #endif
