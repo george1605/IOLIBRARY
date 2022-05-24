@@ -24,6 +24,7 @@ namespace io
 #define EBIGBUF 0xA00
 #define ESOCKERR 0xA01
 #define ENOFILE 0xA02
+#define ENOX11 0xA04
 	int error = 0;
 
 	void printc(char x)
@@ -44,6 +45,8 @@ namespace io
 			return "ESOCKERR";
 		else if (x == ENOFILE)
 			return "ENOFILE";
+		else if (x == ENOX11)
+			return "ENOX11";
 		return NULL;
 	}
 
@@ -315,6 +318,7 @@ namespace io
 			}
 		}
 	};
+
 }
 
 #endif

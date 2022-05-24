@@ -2,14 +2,13 @@
 #include "smath.h"
 #include "html.h"
 #include <iostream>
+#include "x11.h"
 
 int main(int argc, char** argv)
 {
-	io::uuid x = io::new_uuid();
-	io::gen_uuid(x);
-	io::printu(x);
-	io::free_uuid(x);
-	io::pause();
 	// uses system("pause")
+	io::x11_setup();
+	io::print_err();
+	io::pause();
 	return 0;
 }
