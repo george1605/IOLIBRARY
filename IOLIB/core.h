@@ -249,9 +249,7 @@ namespace io
 
 	handle open_hnd(char* fname, char* mode)
 	{
-#include <winbase.h>
 		return NULL;
-		
 	}
 
 
@@ -325,7 +323,10 @@ namespace io
 
 	uuid new_uuid()
 	{
-		return (uuid)malloc(16);
+		uuid x = (uuid)malloc(16);
+		if (x == NULL) return x; 
+		x[15] = 0;
+		return x;
 	}
 
 	void free_uuid(uuid x)
@@ -337,8 +338,9 @@ namespace io
 	{
 		if (buf == NULL)
 			return (wchar_t*)NULL;
-		wchar_t* ptr = new wchar_t[strlen(buf)];
-		mbstowcs(ptr, buf, strlen(buf));
+		int x = strlen(buf);
+		wchar_t* ptr = new wchar_t[x];
+		mbstowcs(ptr, buf, x);
 	}
 #ifndef PAGE_SIZE
 	#define PAGE_SIZE 4096
@@ -378,7 +380,6 @@ namespace io
 			}
 		}
 	};
-
 }
 
 #endif

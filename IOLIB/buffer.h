@@ -34,6 +34,15 @@ namespace io
 			this->p = (char*)n.c_str();
 			this->Size = n.size();
 		}
+		buffer(char* x)
+		{
+			if (x == NULL)
+				this->Size = 0;
+			else 
+				this->Size = strlen(x);
+			this->p = x;
+
+		}
 		buffer(int size)
 		{
 			if (size >= BUFLIMIT)

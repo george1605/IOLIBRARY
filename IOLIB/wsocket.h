@@ -79,4 +79,59 @@ namespace io
 		}
 	};
 
+	typedef unsigned char ipv4[4];
+	typedef unsigned char ipv6[16];
+
+	void make_ipv4(std::string str, ipv4 _ip)
+	{
+		int c = 0, d = 0;
+		while (str[c] != NULL)
+		{
+			if (str[c] == '.')
+				d++;
+			if(str[c] >= 'a')
+				_ip[d] = _ip[d] * 16 + str[c] - 'a';
+			else
+				_ip[d] = _ip[d] * 16 + str[c] - 'a';
+			c++;
+		}
+	}
+
+	template<typename T>
+	class pack_header
+	{
+	public:
+		pack_header() {}
+		T info;
+		uint32_t size = 0;
+	};
+
+	template<typename T>
+	class package
+	{
+	public:
+		io::pack_header<T> head;
+		std::vector<uint8_t> body; // buffer ?
+		package() {}
+		size_t size()
+		{
+			return sizeof(head.info) + body.size();
+		}
+	};
+
+	class basic_package
+	{
+	public:
+		io::pack_header<std::string> head;
+		io::buffer body;
+		basic_package() {}
+		size_t size()
+		{
+			return head.info.size() + body.size();
+		}
+		void send_to(wsocket sock, io::ipv4 _ip)
+		{
+			send(sock.s, body.c_str(), body.size(), 0);
+		}
+	};
 }

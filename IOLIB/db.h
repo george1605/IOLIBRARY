@@ -51,4 +51,6 @@ namespace io
 	{
 		return std::vector<js_value> { js_value(0) };
 	}
+
+	typedef std::vector<js_value> js_heap;
 }

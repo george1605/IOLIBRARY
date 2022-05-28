@@ -70,4 +70,16 @@ namespace io
 		x << "(" << n.x << ", " << n.y << ")";
 		return x;
 	}
+
+	void do_xor (int v[], int mask) // encryption !!!
+	{
+		for (int a = 0; v[a] != 0; a++)
+			v[a] = v[a] ^ mask;
+	}
+
+	void do_xor (unsigned char bytes[], int mask)
+	{
+		for (int a = 0; bytes[a] != 0; a++)
+			bytes[a] = (char)(bytes[a] ^ mask);
+	}
 }
