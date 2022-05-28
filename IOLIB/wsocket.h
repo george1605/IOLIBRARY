@@ -25,10 +25,10 @@ namespace io
 	public:
 #ifdef _WIN32
 		SOCKET s;
-		sockaddr_in in;
+		sockaddr_in* in;
 		wsocket()
 		{
-			socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+			s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 		}
 #endif
 	};
@@ -48,9 +48,35 @@ namespace io
 		}
 	};
 
-	void connect()
+	class client
 	{
+	public:
+		client()
+		{
 
-	}
+		}
+	};
+
+	class server
+	{
+	private:
+		wsocket web_sock;
+	public:
+		server()
+		{
+
+		}
+
+		void wait()
+		{
+			listen(web_sock.s, 0);
+		}
+
+		void accept_req()
+		{
+			int p = 4;
+			accept(web_sock.s, (sockaddr*)web_sock.in, &p);
+		}
+	};
 
 }

@@ -29,6 +29,11 @@ namespace io
 			p = (char*)malloc(10);
 			Size = 10;
 		}
+		buffer(std::string n)
+		{
+			this->p = (char*)n.c_str();
+			this->Size = n.size();
+		}
 		buffer(int size)
 		{
 			if (size >= BUFLIMIT)

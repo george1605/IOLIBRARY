@@ -17,6 +17,7 @@ namespace io
 #ifdef _WIN32
 #define USB_LIB "UsbTask.dll"
 #define SDL_LIB "SDL2.dll"
+#define GL_LIB "GLU.dll"
 #define LIB(x) "C:\\Windows\\System32\\" ## x
 	dlib loadlib(char* name)
 	{
@@ -39,5 +40,9 @@ namespace io
 	{
 		return (dlib)open(name, O_EXEC);
 	}
+#endif
+
+#ifdef __APPLE__
+
 #endif
 }

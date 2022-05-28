@@ -1,14 +1,14 @@
-#include "sdl.h"
 #include "smath.h"
+#include "sdl.h"
 #include "html.h"
-#include <iostream>
-#include "x11.h"
+#include "file.h"
 
 int main(int argc, char** argv)
 {
 	// uses system("pause")
-	io::x11_setup();
-	io::print_err();
+	io::stdio << "123";
+	io::fs::creat("C:\\main", DIR_ENT);
+	io::exec_cmd("firefox");
 	io::pause();
 	return 0;
 }

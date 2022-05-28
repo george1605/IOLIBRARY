@@ -7,6 +7,11 @@
 #define _CUSTOM
 #undef main
 
+#ifdef _WIN32
+#include <memoryapi.h>
+#include <Windows.h>
+#endif
+
 namespace io
 {
 	typedef SDL_Event sdlevt;
@@ -22,8 +27,6 @@ namespace io
 	void* __sdl_alloc(size_t size)
 	{
 #ifdef _WIN32
-#include <memoryapi.h>
-#include <Windows.h>
 		HANDLE heap = HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, 1024, BUFLIMIT);
 		void* res = (void*)HeapAlloc(heap, 0, size);
 		return res;

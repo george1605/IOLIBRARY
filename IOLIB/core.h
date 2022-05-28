@@ -37,6 +37,11 @@ namespace io
 		wprintf(L"%c", w);
 	}
 
+	void prints(const char* s)
+	{
+		printf("%s", s);
+	}
+
 	const char* perror(int x)
 	{
 		if (x == EBIGBUF)
@@ -122,13 +127,25 @@ namespace io
 		}
 	};
 
+	void exec_cmd(const char* x)
+	{
+#ifdef __linux__
+		int fd = fork();
+		execve(x, NULL, NULL);
+#endif
+
+#ifdef _WIN32
+		ShellExecuteA(NULL, "open", x, NULL, NULL, SW_NORMAL);
+#endif
+	}
+
 	class llink
 	{
 	public:
 		llink* next = NULL;
 		llink* prev = NULL;
 
-		long value;
+		long value = 0;
 		llink() {}
 		llink(int a) { value = a; }
 		~llink()
@@ -194,6 +211,40 @@ namespace io
 			this->prev = NULL;
 		}
 	};
+
+	class btree
+	{
+	private:
+		btree* ch1, * ch2;
+	public:
+		long info;
+		btree() {}
+		~btree()
+		{
+			delete ch1;
+			delete ch2;
+		}
+		void invert()
+		{
+			std::swap(ch1->info, ch2->info);
+		}
+		void add_node()
+		{
+			if (!ch2)
+				ch1 = new btree;
+			else
+				ch2 = new btree;
+		}
+		void unlink()
+		{
+			this->ch1 = this->ch2 = NULL;
+		}
+		int no_child()
+		{
+			return (ch1 != NULL) + (ch2 != NULL);
+		}
+	};
+
 	typedef void* handle;
 
 	handle open_hnd(char* fname, char* mode)
@@ -222,7 +273,16 @@ namespace io
 	template<typename T>
 	class smart_ptr
 	{
-
+	protected:
+		void* ptr = NULL;
+	public:
+		smart_ptr()
+		{}
+		~smart_ptr()
+		{
+			if (ptr)
+				free(ptr);
+		}
 	};
 
 	template<typename T, typename X>

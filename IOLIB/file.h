@@ -1,6 +1,13 @@
 #pragma once
 #include "buffer.h"
-#include <filesystem>
+#ifdef _WIN32
+#include <windows.h>
+#include <Shlwapi.h>
+#include <direct.h>
+#else
+#include <fcntl.h>
+#include <unistd.h>
+#endif
 
 namespace io
 {
@@ -32,9 +39,23 @@ namespace io
 			if (fd[0] == NULL || fd[1] == NULL)
 				io::error = ENOFILE;
 		}
+		file(const char* fname)
+		{
+			fd[0] = fopen(fname, "r");
+			fd[1] = fopen(fname, "w");
+		}
 		void readbuf(io::buffer& buf)
 		{
 			fread(buf.c_str(), 1, buf.size(), fd[0]);
+		}
+		void writebuf(io::buffer& buf)
+		{
+			fwrite(buf.c_str(), 1, buf.size(), fd[1]);
+		}
+		file operator <<(std::string x)
+		{
+			fwrite(x.c_str(), 1, x.size(), fd[1]);
+			return *this;
 		}
 	} stdio(0, 1);
 
@@ -42,16 +63,24 @@ namespace io
 	public:
 		static char* resolve(char* path)
 		{
-	#include <windows.h>
-	#include <Shlwapi.h>
-			GetModuleFileName(NULL, path, sizeof(path));
-
+#ifdef _WIN32
+			GetModuleFileNameA(NULL, path, sizeof(path));
+#endif
 		}
 
 		static void creat(char* nme, int ent)
 		{
+#ifdef _WIN32
 			if (ent == FILE_ENT)
-				CreateFile();
+				CreateFileA(nme, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULL);
+			else
+				_mkdir(nme);
+#endif
+		}
+
+		static void creat(const char* nme, int ent)
+		{
+			creat((char*)nme, ent);
 		}
 	};
 

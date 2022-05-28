@@ -143,10 +143,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="arm.h" />
+    <ClInclude Include="asm.h" />
     <ClInclude Include="audio.h" />
     <ClInclude Include="buffer.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="core.h" />
+    <ClInclude Include="db.h" />
     <ClInclude Include="file.h" />
     <ClInclude Include="format.h" />
     <ClInclude Include="gl.h" />
