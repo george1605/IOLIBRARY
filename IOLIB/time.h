@@ -5,14 +5,16 @@
 #if defined(__APPLE__) || defined(__MACH__)
 #include <mach/mach_time.h>
 #endif
+#ifdef _WIN32
+#include <synchapi.h>
+#endif
 
 namespace io
 {
 
-	void sleep(int x)
+	void sleep(size_t x)
 	{
 #ifdef _WIN32
-		#include <Windows.h>
 		Sleep((DWORD)x);
 #endif
 	}
