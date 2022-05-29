@@ -9,7 +9,7 @@ namespace io
 
 	void ml_init(ai_weights w, size_t size)
 	{
-		if (w == NULL)
+		if (w == nullptr)
 			w = (float*)malloc(size * sizeof(float));
 		std::memset(w, 0, size);
 	}

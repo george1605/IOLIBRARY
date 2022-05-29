@@ -34,7 +34,7 @@ namespace io
 
 	void jpeg_read(std::string path, jfi_header* p)
 	{
-		if (p == NULL) return;
+		if (p == nullptr) return;
 		std::fstream n(path);
 		n.read((char*)p, sizeof(p));
 		n.close();
@@ -42,7 +42,7 @@ namespace io
 
 	int jpeg_vers(jfi_header* x)
 	{
-		if (x == NULL)
+		if (x == nullptr)
 			return 0;
 
 		return x->Version[0] * 100 + x->Version[1];
@@ -56,7 +56,7 @@ namespace io
 
 	void jpeg_read(std::string path, img_buffer x)
 	{
-		if (x.Info == NULL) return;
+		if (x.Info == nullptr) return;
 		std::fstream n(path);
 		n.seekg(sizeof(jfi_header) + 1); // skips the header
 		n.read((char*)x.Info, x.Length);

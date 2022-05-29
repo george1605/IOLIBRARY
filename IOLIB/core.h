@@ -1,5 +1,6 @@
 #pragma once
 #include <stdlib.h>
+#include <iostream>
 #include <vector>
 #include <initializer_list>
 #include <string.h>
@@ -12,21 +13,19 @@
 #define asm __asm__
 #endif
 
-#ifdef __cplusplus
-
-
 namespace io
 {
 
-#endif
-
 #define __DENIED static
 #define __UNSAFE private: \
-
+// general errors - (eg. no library) -
+#define ENOX11 0x100
+#define ENOGL 0x200
+// run-time errors 
+#define ENULLPTR 0x700
 #define EBIGBUF 0xA00
 #define ESOCKERR 0xA01
 #define ENOFILE 0xA02
-#define ENOX11 0xA04
 	int error = 0;
 
 	void printc(char x)
@@ -54,7 +53,7 @@ namespace io
 			return "ENOFILE";
 		else if (x == ENOX11)
 			return "ENOX11";
-		return NULL;
+		return nullptr;
 	}
 
 	int get_rand(int seed = 1)
@@ -73,6 +72,159 @@ namespace io
 	{
 		printf("Error %s", io::perror(io::error));
 	}
+	class string
+	{
+	private:
+		char* ptr;
+		int Size, Cnt = 0;
+	public:
+		string()
+		{
+			Size = 0;
+		}
+		string(size_t size)
+		{
+			ptr = (char*)malloc(size);
+			Size = size;
+		}
+		string(size_t size, char x)
+		{
+			ptr = (char*)malloc(size);
+			Size = size;
+			memset(ptr, x, size);
+		}
+		string(const char* p)
+		{
+			ptr = (char*)p;
+		}
+		~string()
+		{
+			if (ptr)
+				free(ptr);
+			this->Size = 0;
+		}
+		bool empty()
+		{
+			return (ptr == nullptr);
+		}
+		void push(char c)
+		{
+
+		}
+		size_t size()
+		{
+			return Size;
+		}
+		char* addr()
+		{
+			return this->ptr;
+		}
+		bool copy_from(io::string p)
+		{
+			if (p.empty())
+				return false;
+			memcpy(ptr, p.addr(), p.size());
+			return true;
+		}
+		std::string to_std()
+		{
+			return std::string(ptr);
+		}
+		char operator [](int k)
+		{
+			if (k > Size)
+				return 0;
+			return ptr[k];
+		}
+
+		void operator =(const char* x)
+		{
+			this->ptr = (char*)x;
+		}
+	};
+
+	void exec_syscall(size_t x, void* info)
+	{
+#ifdef __linux__
+		syscall(x, info);
+#elif defined(_WIN32)
+
+#endif
+	}
+
+	std::ostream& operator << (std::ostream& o, io::string str)
+	{
+		if (str.addr() == nullptr)
+			return o;
+		o << str.addr();
+		return o;
+	}
+
+	class exception
+	{
+	public:
+		int code;
+		io::string name; // for custom errors
+		io::string body;
+		exception(int code)
+		{
+			this->code = code;
+			this->body = "Error";
+		}
+		exception(int code, io::string x)
+		{
+			this->code = code;
+		}
+		exception(io::string a, io::string b)
+		{
+
+		}
+		void print()
+		{
+			if(code != 0)
+				std::cout << io::perror(code) << ": " << this->body;
+			else
+				std::cout << io::perror(code) << ": " << this->body;
+		}
+		bool is_null()
+		{
+			return (name.empty() && body.empty());
+		}
+	};
+
+	template<typename T>
+	class expect
+	{
+	private:
+		T val;
+		io::exception err;
+	public:
+		expect()
+		{
+			err = io::exception(0);
+		}
+		expect(T n)
+		{
+			val = n;
+		}
+		expect(io::exception n)
+		{
+			err = n;
+		}
+		io::exception error()
+		{
+			return err;
+		}
+		T value()
+		{
+			return value;
+		}
+		void operator =(T x)
+		{
+			if (err.is_null())
+				value = x;
+		}
+	};
 
 	template<typename T>
 	class queue
@@ -133,19 +285,19 @@ namespace io
 	{
 #ifdef __linux__
 		int fd = fork();
-		execve(x, NULL, NULL);
+		execve(x, nullptr, nullptr);
 #endif
 
 #ifdef _WIN32
-		ShellExecuteA(NULL, "open", x, NULL, NULL, SW_NORMAL);
+		ShellExecuteA(nullptr, "open", x, nullptr, nullptr, SW_NORMAL);
 #endif
 	}
 
 	class llink
 	{
 	public:
-		llink* next = NULL;
-		llink* prev = NULL;
+		llink* next = nullptr;
+		llink* prev = nullptr;
 
 		long value = 0;
 		llink() {}
@@ -153,9 +305,9 @@ namespace io
 		~llink()
 		{
 			llink* p;
-			if (this->next == NULL)
+			if (this->next == nullptr)
 				return;
-			for (p = this->next->next; p != NULL; p = p->next);
+			for (p = this->next->next; p != nullptr; p = p->next);
 		}
 		void alloc(int x)
 		{
@@ -172,19 +324,19 @@ namespace io
 		llink* begin()
 		{
 			llink* q;
-			for (q = this->prev; q->prev != NULL; q = q->prev);
+			for (q = this->prev; q->prev != nullptr; q = q->prev);
 			return q;
 		}
 		llink* end()
 		{
 			llink* q;
-			for (q = this->next; q->next != NULL; q = q->next);
+			for (q = this->next; q->next != nullptr; q = q->next);
 			return q;
 		}
 		void show()
 		{
 			llink* p = this->next;
-			while (p != NULL)
+			while (p != nullptr)
 			{
 				printf("%i ",p->value);
 				p = p->next;
@@ -199,18 +351,18 @@ namespace io
 		{
 			int c = 0;
 			llink* q;
-			for (q = this->next; q->next != NULL && c < x; q = q->next)
+			for (q = this->next; q->next != nullptr && c < x; q = q->next)
 				c++;
 			return q->value;
 		}
 		bool empty()
 		{
-			return (this->prev == NULL && this->next == NULL);
+			return (this->prev == nullptr && this->next == nullptr);
 		}
 		__UNSAFE void unlink() // unsafe functions are private
 		{
-			this->next = NULL;
-			this->prev = NULL;
+			this->next = nullptr;
+			this->prev = nullptr;
 		}
 	};
 
@@ -239,21 +391,13 @@ namespace io
 		}
 		void unlink()
 		{
-			this->ch1 = this->ch2 = NULL;
+			this->ch1 = this->ch2 = nullptr;
 		}
 		int no_child()
 		{
-			return (ch1 != NULL) + (ch2 != NULL);
+			return (ch1 != nullptr) + (ch2 != nullptr);
 		}
 	};
-
-	typedef void* handle;
-
-	handle open_hnd(char* fname, char* mode)
-	{
-		return NULL;
-	}
-
 
 	void simple_wait(int j = 10000)
 	{
@@ -274,14 +418,22 @@ namespace io
 	class smart_ptr
 	{
 	protected:
-		void* ptr = NULL;
+		void* ptr = nullptr;
 	public:
 		smart_ptr()
 		{}
+		smart_ptr(size_t n)
+		{
+			ptr = malloc(n);
+		}
 		~smart_ptr()
 		{
 			if (ptr)
 				free(ptr);
+		}
+		void resize(size_t k)
+		{
+			realloc(this->ptr, k);
 		}
 	};
 
@@ -290,7 +442,7 @@ namespace io
 	{
 		T first;
 		X second;
-		pair() : first((T)0), second((X)0) {}
+		pair() {}
 		pair(T n, X m) : first(n), second(m) {}
 		void copy_to(void* ptr) // to list
 		{
@@ -302,9 +454,9 @@ namespace io
 	typedef unsigned char* uuid;
 	bool gen_uuid(uuid _id)
 	{
-		if (_id == NULL) return false;
+		if (_id == nullptr) return false;
 		int a;
-		for (a = 0; a < 16 && _id[a] != NULL; a++)
+		for (a = 0; a < 16 && _id[a] != '\0'; a++)
 			_id[a] = rand() % 256, srand(a << (a % 4 + 1));
 		return true;
 	}
@@ -312,21 +464,21 @@ namespace io
 	void printh(unsigned char* buffer)
 	{
 		int a;
-		for (a = 0; buffer[a] != NULL; a++)
+		for (a = 0; buffer[a] != '\0'; a++)
 			printf("%02x ", buffer[a]);
 	}
 
 	void printu(uuid buffer)
 	{
 		int a;
-		for (a = 0; buffer[a] != NULL && a < 16; a++)
+		for (a = 0; buffer[a] != '\0' && a < 16; a++)
 			printf("%02x ", buffer[a]);
 	}
 
 	uuid new_uuid()
 	{
 		uuid x = (uuid)malloc(16);
-		if (x == NULL) return x; 
+		if (x == nullptr) return x; 
 		x[15] = 0;
 		return x;
 	}
@@ -338,8 +490,8 @@ namespace io
 
 	wchar_t* unicode(char* buf)
 	{
-		if (buf == NULL)
-			return (wchar_t*)NULL;
+		if (buf == nullptr)
+			return (wchar_t*)nullptr;
 		int x = strlen(buf);
 		wchar_t* ptr = new wchar_t[x];
 		mbstowcs(ptr, buf, x);
@@ -359,12 +511,10 @@ namespace io
 			free(arr[a]);
 	}
 
-	typedef struct
+	struct tbool
 	{
 		char value : 1;
-	} tbool;
-
-#ifdef __cplusplus
+	};
 
 	class blockdev
 	{
@@ -376,12 +526,42 @@ namespace io
 		blockdev() { port = 0xa0; }
 		void write()
 		{
-			if (fname != NULL) // vfs
+			if (fname != nullptr) // vfs
 			{
 				fopen(fname, "w");
 			}
 		}
 	};
-}
 
-#endif
+#define FILE_HANDLE 1
+#define BUFF_HANDLE 2
+#define DEV_HANDLE 4
+#define UUID_HANDLE 8
+
+	template<typename T>
+	class handle
+	{
+		T* ptr;
+	public:
+		handle()
+		{
+			ptr = (T*)malloc(sizeof(T));
+		}
+		~handle()
+		{
+			if (ptr)
+				free(ptr);
+		}
+		void empty()
+		{
+			return (ptr == nullptr);
+		}
+
+		int type()
+		{
+			if (typeid(T) == typeid(io::blockdev))
+				return DEV_HANDLE;
+			return -1;
+		}
+	};
+}

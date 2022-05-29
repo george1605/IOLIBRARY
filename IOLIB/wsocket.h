@@ -86,7 +86,7 @@ namespace io
 	void make_ipv4(std::string str, ipv4 _ip)
 	{
 		int c = 0, d = 0;
-		while (str[c] != NULL)
+		while (str[c] != '\0')
 		{
 			if (str[c] == '.')
 				d++;

@@ -21,7 +21,7 @@ namespace io
 
 	bool has_sdl()
 	{
-		return loadlib((char*)LIB(SDL_LIB)) != NULL;
+		return loadlib((char*)LIB(SDL_LIB)) != nullptr;
 	}
 
 	void* __sdl_alloc(size_t size)
@@ -48,7 +48,7 @@ namespace io
 	{
 #ifdef _CUSTOM
 		char* x = (char*)ptr;
-		if (x == NULL)
+		if (x == nullptr)
 			return;
 		while (*x != 0) // equivalent to memset() 
 			*x = 0, x++;
@@ -87,7 +87,7 @@ namespace io
 	private:
 		SDL_Window* winptr;
 		SDL_Surface* context;
-		SDL_Renderer* renderer = NULL;
+		SDL_Renderer* renderer = nullptr;
 	public:
 		bool closed = false;
 		sdlwin()
@@ -106,7 +106,7 @@ namespace io
 			if (!__sdl_init)
 				SDL_Init(SDL_INIT_EVERYTHING), __sdl_init = true;
 
-			this->winptr = SDL_CreateWindow("NULL",
+			this->winptr = SDL_CreateWindow("nullptr",
 				SDL_WINDOWPOS_CENTERED,
 				SDL_WINDOWPOS_CENTERED,
 				w, h, 0);

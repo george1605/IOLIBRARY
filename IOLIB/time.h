@@ -1,18 +1,25 @@
 #pragma once
 #include "core.h"
+#include <thread>
+#include <chrono>
 #if defined(__APPLE__) || defined(__MACH__)
 #include <mach/mach_time.h>
 #endif
 
 namespace io
 {
+
 	void sleep(int x)
 	{
 #ifdef _WIN32
 		#include <Windows.h>
 		Sleep((DWORD)x);
-		
 #endif
+	}
+
+	void wait(size_t ms = 1000)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 	}
 
 	void time()

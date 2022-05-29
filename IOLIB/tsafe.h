@@ -2,7 +2,7 @@
 #include <thread>
 #include <atomic>
 #include <mutex>
-#include "core.h"
+#include "buffer.h"
 
 namespace io
 {
@@ -36,6 +36,7 @@ namespace io
 	private:
 
 	public:
+		thread(void(*f)()) : std::thread(f) {}
 		void pause()
 		{
 			this->detach();
@@ -52,7 +53,7 @@ namespace io
 #include <synchapi.h>
 		HANDLE lock()
 		{
-			return CreateMutex(NULL, TRUE, );
+			return CreateMutexA(nullptr, TRUE, "MUTEX");
 		}
 
 

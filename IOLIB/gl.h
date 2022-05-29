@@ -8,7 +8,7 @@ namespace io
 {
 	bool has_gl()
 	{
-		return loadlib((char*)LIB(GL_LIB)) != NULL;
+		return loadlib((char*)LIB(GL_LIB)) != nullptr;
 	}
 	
 	void gl_init()

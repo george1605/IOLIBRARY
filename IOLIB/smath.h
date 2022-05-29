@@ -1,6 +1,7 @@
 #pragma once
 #include <cmath>
 #include <ostream>
+#include "core.h"
 
 namespace io
 {
@@ -20,7 +21,7 @@ namespace io
 		return (k / 2);
 	}
 
-	long double gravity(double mass1, double mass2, double r)
+	long double gravity(long double mass1,long double mass2,long double r)
 	{
 		return ((long double)G_CONST * mass1 * mass2) / (r * r);
 	}
@@ -37,11 +38,22 @@ namespace io
 		return n * fact(n - 1);
 	}
 
+	int fibo_r(int n) // <- NOT RECOMENDED for n > (let's say 100)
+	{
+		if (n == 1 || n == 0)
+			return 1;
+		return fibo_r(n - 1) + fibo_r(n - 2);
+	}
+
 	class vector2
 	{
 	public:
 		double x, y;
 		vector2() : x(1), y(1) {}
+		vector2(io::pair<int, int> point) // position vector
+		{
+			x = point.first, y = point.second;
+		}
 		vector2(double x, double y)
 		{
 			this->x = x;
@@ -62,6 +74,11 @@ namespace io
 		double mod()
 		{
 			return sqrt(x * x + y * y);
+		}
+
+		bool is_zero()
+		{
+			return (x == 0 && y == 0);
 		}
 	};
 

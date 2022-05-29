@@ -6,15 +6,15 @@ namespace io
 	class color
 	{
 	private:
-		int value;
-		int r, g, b;
+		uint32_t value;
+		uint8_t r, g, b;
 	public:
 		color(int x)
 		{
 			value = x;
 		}
 
-		color(int r, int g, int b)
+		color(uint8_t r, uint8_t g, uint8_t b)
 		{
 			this->r = r, this->g = g, this->b = b;
 		}
@@ -31,6 +31,14 @@ namespace io
 			arr[0] = r;
 			arr[1] = g;
 			arr[2] = b;
+		}
+
+		void rand() // random color ?
+		{
+			int k = time(NULL);
+			r = get_rand(k) % 256;
+			g = get_rand(k) % 256;
+			b = get_rand(k) % 256;
 		}
 	};
 }

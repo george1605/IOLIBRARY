@@ -6,7 +6,7 @@ namespace io
 {
 	void msgbox(const char* title,const char* text)
 	{
-		MessageBoxA(NULL, text, title, MB_OK | MB_ICONASTERISK);
+		MessageBoxA(nullptr, text, title, MB_OK | MB_ICONASTERISK);
 	}
 
 	class window
@@ -20,7 +20,7 @@ namespace io
 		}
 		void get_title(char* str)
 		{
-			if (str == NULL)
+			if (str == nullptr)
 				return;
 			GetWindowTextA(hnd, str, strlen(str));
 		}

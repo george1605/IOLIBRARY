@@ -11,7 +11,7 @@ namespace io
 
 	void std_exec(main_func x)
 	{
-		if (x == NULL) return;
+		if (x == nullptr) return;
 		x(0, (char**)0);
 	}
 #ifdef _WIN32
@@ -21,8 +21,8 @@ namespace io
 #define LIB(x) "C:\\Windows\\System32\\" ## x
 	dlib loadlib(char* name)
 	{
-		if (name == NULL)
-			return NULL;
+		if (name == nullptr)
+			return nullptr;
 		return (dlib)LoadLibraryA(name);
 	}
 

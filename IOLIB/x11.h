@@ -31,7 +31,7 @@ namespace io
 	public:
 		display()
 		{
-			info = XOpenDisplay(NULL);
+			info = XOpenDisplay(nullptr);
 		}
 
 		~display()

@@ -16,13 +16,13 @@ namespace io
 
 	void mmiow(void* addr, int value)
 	{
-		if (addr == NULL) return;
+		if (addr == nullptr) return;
 		*(volatile int*)addr = value;
 	}
 
 	int mmior(void* addr)
 	{
-		if (addr == NULL) return;
+		if (addr == nullptr) return;
 		return (*(volatile int*)addr);
 	}
 

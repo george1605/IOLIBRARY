@@ -1,5 +1,6 @@
 #pragma once
 #include "buffer.h"
+#include <fstream>
 #ifdef _WIN32
 #include <windows.h>
 #include <Shlwapi.h>
@@ -15,46 +16,50 @@ namespace io
 #define DIR_ENT 2
 #define DEV_ENT 4
 
-	__DENIED FILE* from_fd(int x)
+	std::fstream from_fd(int x)
 	{
 		if (x < 0)
-			return (FILE*)NULL;
+			return std::fstream();
 		if (x == 0)
-			return stdin;
+			return std::fstream(stdin);
 		else if (x == 1)
-			return stdout;
+			return std::fstream(stdout);
 		else
-			return (FILE*)x;
+			return std::fstream((FILE*)x);
 	}
 
 	class file
 	{
 	private:
-		FILE* fd[2];
+		std::fstream fd[2];
 	public:
 		file(int fd0, int fd1 = 1)
 		{
 			fd[0] = from_fd(fd0);
 			fd[1] = from_fd(fd1);
-			if (fd[0] == NULL || fd[1] == NULL)
+			if (fd[0].fail() || fd[1].fail())
 				io::error = ENOFILE;
+		}
+		file(const file& f)
+		{
+		
 		}
 		file(const char* fname)
 		{
-			fd[0] = fopen(fname, "r");
-			fd[1] = fopen(fname, "w");
+			fd[0] = std::fstream(fname, std::fstream::in);
+			fd[1] = std::fstream(fname, std::fstream::out);
 		}
 		void readbuf(io::buffer& buf)
 		{
-			fread(buf.c_str(), 1, buf.size(), fd[0]);
+			fd[0].read(buf.c_str(), buf.size());
 		}
 		void writebuf(io::buffer& buf)
 		{
-			fwrite(buf.c_str(), 1, buf.size(), fd[1]);
+			fd[1].write(buf.c_str(), buf.size());
 		}
 		file operator <<(std::string x)
 		{
-			fwrite(x.c_str(), 1, x.size(), fd[1]);
+			fd[1].write(x.c_str(), x.size());
 			return *this;
 		}
 	} stdio(0, 1);
@@ -64,7 +69,7 @@ namespace io
 		static char* resolve(char* path)
 		{
 #ifdef _WIN32
-			GetModuleFileNameA(NULL, path, sizeof(path));
+			GetModuleFileNameA(nullptr, path, sizeof(path));
 #endif
 		}
 
@@ -72,7 +77,7 @@ namespace io
 		{
 #ifdef _WIN32
 			if (ent == FILE_ENT)
-				CreateFileA(nme, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULL);
+				CreateFileA(nme, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, nullptr);
 			else
 				_mkdir(nme);
 #else
@@ -94,6 +99,11 @@ namespace io
 			return (bool)CopyFileA(file1, file2, FALSE);
 #endif
 			return true;
+		}
+
+		static std::string to_posix(std::string x)
+		{
+			
 		}
 	};
 

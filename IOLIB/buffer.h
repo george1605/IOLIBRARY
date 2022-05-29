@@ -36,7 +36,7 @@ namespace io
 		}
 		buffer(char* x)
 		{
-			if (x == NULL)
+			if (x == nullptr)
 				this->Size = 0;
 			else 
 				this->Size = strlen(x);
@@ -80,11 +80,11 @@ namespace io
 		{
 			return Size;
 		}
-		char operator [](int pos)
+		io::expect<char> operator [](int pos)
 		{
 			if (pos < 0 || pos > Size) // out of bounds
-				return '\0';
-			return p[pos];
+				return io::expect<char>(io::exception(ENULLPTR));
+			return io::expect<char>(p[pos]);
 		}
 	};
 
@@ -122,7 +122,7 @@ namespace io
 #endif
 
 #ifdef _WIN32
-		return NULL;
+		return nullptr;
 #endif
 	}
 }
