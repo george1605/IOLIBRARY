@@ -47,8 +47,8 @@ namespace io
 		{
 			if (size >= BUFLIMIT)
 			{
-				p = (char*)malloc(10); // reosrts to the basic buffer
-				Size = 10;
+				p = (char*)malloc(BUFLIMIT); // reosrts to the basic buffer
+				Size = BUFLIMIT;
 				io::error = EBIGBUF;
 			}
 			else
