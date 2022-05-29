@@ -4,6 +4,7 @@
 #include <initializer_list>
 #include <string.h>
 #if _MSC_VER > 0
+#include <Windows.h>
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
@@ -12,6 +13,7 @@
 #endif
 
 #ifdef __cplusplus
+
 
 namespace io
 {

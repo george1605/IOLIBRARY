@@ -1,20 +1,18 @@
 #include "smath.h"
-#include "sdl.h"
-#include "html.h"
 #include "file.h"
-// #include "wsocket.h"
+#include "mobile.h"
+#include "sdl.h"
 
-void test_ip()
+void test_mobile()
 {
-	
+	io::printc(io::mobile_dev + 'B');
 }
 
 int main(int argc, char** argv)
 {
 	// uses system("pause")
-	io::stdio << "123";
-	io::fs::creat("C:\\main", DIR_ENT);
-	test_ip();
+	io::fs::copy("C:\\Users\\George\\Desktop\\main.txt", "C:\\main.txt");
+	test_mobile();
 	io::pause();
 	return 0;
 }

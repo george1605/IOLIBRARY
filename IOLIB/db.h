@@ -52,5 +52,10 @@ namespace io
 		return std::vector<js_value> { js_value(0) };
 	}
 
+	class db_cred
+	{
+
+	};
+
 	typedef std::vector<js_value> js_heap;
 }

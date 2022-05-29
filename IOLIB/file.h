@@ -75,12 +75,25 @@ namespace io
 				CreateFileA(nme, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULL);
 			else
 				_mkdir(nme);
+#else
+			if (ent == FILE_ENT)
+				creat(nme, O_RDONLY | O_WRONLY);
+			else
+				mkdir(nme);
 #endif
 		}
 
 		static void creat(const char* nme, int ent)
 		{
 			creat((char*)nme, ent);
+		}
+
+		static bool copy(const char* file1, const char* file2)
+		{
+#ifdef _WIN32
+			return (bool)CopyFileA(file1, file2, FALSE);
+#endif
+			return true;
 		}
 	};
 
@@ -91,6 +104,10 @@ namespace io
 		vfs()
 		{
 			
+		}
+		vfs(const char* root_name)
+		{
+			root.value = (long)root_name;
 		}
 		void addFile(char* fname)
 		{

@@ -2,6 +2,7 @@
 #include "core.h"
 
 #ifdef _WIN32
+#include <Windows.h>
 #include <winsock.h>
 #include <WinSock2.h>
 #endif

@@ -157,6 +157,7 @@
     <ClInclude Include="jpeg.h" />
     <ClInclude Include="lib.h" />
     <ClInclude Include="ml.h" />
+    <ClInclude Include="mobile.h" />
     <ClInclude Include="sdl.h" />
     <ClInclude Include="smath.h" />
     <ClInclude Include="time.h" />
