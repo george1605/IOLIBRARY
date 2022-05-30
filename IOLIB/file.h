@@ -28,6 +28,15 @@ namespace io
 			return std::fstream((FILE*)x);
 	}
 
+        void* mapfile(int fd, size_t size = 4096, void* ptr = nullptr)
+        {
+        #ifdef _UNIX_
+          return mmap(ptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+        #else
+          return malloc(size);
+        #endif
+        }
+
 	class file
 	{
 	private:
