@@ -1,0 +1,5 @@
+if(gcc)
+	g++ -std=c++11 Main.cpp
+
+if(clang)
+	clang++ -Wall -std=c++11 Main.cpp -o vastio_test

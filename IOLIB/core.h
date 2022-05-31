@@ -76,7 +76,8 @@ namespace io
 	{
 	private:
 		char* ptr;
-		int Size, Cnt = 0;
+		size_t Size, Cnt = 0;
+		bool Alloc = false; // allocated by the class or by user via char* 
 	public:
 		string()
 		{
@@ -85,13 +86,16 @@ namespace io
 		string(size_t size)
 		{
 			ptr = (char*)malloc(size);
+			Alloc = true;
 			Size = size;
 		}
 		string(size_t size, char x)
 		{
+			size++;
 			ptr = (char*)malloc(size);
-			Size = size;
+			Size = size, Alloc = true;
 			memset(ptr, x, size);
+			ptr[Size - 1] = 0;
 		}
 		string(const char* p)
 		{
@@ -99,9 +103,8 @@ namespace io
 		}
 		~string()
 		{
-			if (ptr)
-				free(ptr);
-			this->Size = 0;
+			// if (ptr && this->Alloc) <- WHY THIS CAUSES EXCEPTION?
+			//	free(ptr);
 		}
 		bool empty()
 		{
@@ -109,7 +112,9 @@ namespace io
 		}
 		void push(char c)
 		{
-
+			if (Cnt >= Size)
+				realloc(ptr, Cnt + 5), Size = Cnt;
+			ptr[Cnt++] = c;
 		}
 		size_t size()
 		{
@@ -139,7 +144,28 @@ namespace io
 
 		void operator =(const char* x)
 		{
-			this->ptr = (char*)x;
+			size_t p = strlen(x);
+			if (this->Size < p)
+				realloc(this->ptr, p), this->Size = p;
+			memcpy(this->ptr, x, p);
+		}
+
+		void reverse()
+		{
+			char temp;
+			for (size_t i = 0; i <= Size / 2; i++)
+			{
+				temp = ptr[i];
+				ptr[i] = ptr[Size - i - 1];
+				ptr[Size - i - 1] = temp;
+			}
+		}
+
+		string dup() // duplicate the string
+		{
+			io::string p(this->Size + 1, '\0');
+			memcpy(p.addr(), this->ptr, this->Size);
+			return p;
 		}
 	};
 
@@ -166,6 +192,10 @@ namespace io
 		int code;
 		io::string name; // for custom errors
 		io::string body;
+		exception() 
+		{
+			this->code = -1;
+		}
 		exception(int code)
 		{
 			this->code = code;
@@ -177,18 +207,20 @@ namespace io
 		}
 		exception(io::string a, io::string b)
 		{
-
+			this->code = -1;
+			this->name = a;
+			this->body = b;
 		}
 		void print()
 		{
 			if(code != 0)
 				std::cout << io::perror(code) << ": " << this->body;
 			else
-				std::cout << io::perror(code) << ": " << this->body;
+				std::cout << this->name << ": " << this->body;
 		}
 		bool is_null()
 		{
-			return (name.empty() && body.empty());
+			return (name.empty() && body.empty() || code == 0);
 		}
 	};
 
@@ -199,13 +231,11 @@ namespace io
 		T val;
 		io::exception err;
 	public:
-		expect()
-		{
-			err = io::exception(0);
-		}
+		expect(){}
 		expect(T n)
 		{
 			val = n;
+			err = io::exception(0);
 		}
 		expect(io::exception n)
 		{
@@ -222,7 +252,7 @@ namespace io
 		void operator =(T x)
 		{
 			if (err.is_null())
-				value = x;
+				this->val = x;
 		}
 	};
 

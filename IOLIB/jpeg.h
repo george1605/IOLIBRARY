@@ -1,14 +1,16 @@
 #pragma once
 #include <fstream>
 #include "buffer.h"
+#if !defined(_str) && !defined(_byte) // i use simmilar macros in other projects
 #define _byte unsigned char
 #define _str const char*
 #define _usename(x) using namespace x
+#endif
 
 namespace io
 {
 #define JPEG_SIZE 1
-	typedef struct _JFIFHeader
+	struct jfi_header
 	{
 		_byte SOI[2];          /*  *00h*  Start of Image Marker     */
 		_byte APP0[2];         /* 02h  Application Use Marker    */
@@ -20,9 +22,9 @@ namespace io
 		_byte Ydensity[2];     /* 0Ch  Vertical Resolution       */
 		_byte XThumbnail;      /* 0Eh  Horizontal Pixel Count    */
 		_byte YThumbnail;      /* 0Fh  Vertical Pixel Count      */
-	} jfi_header;
+	};
 
-	typedef struct _IMGBuf
+	struct img_buffer
 	{
 		_byte* Info;
 		size_t Length;
@@ -30,7 +32,7 @@ namespace io
 		{
 			(strlen((_str)Info) == Length);
 		}
-	} img_buffer;
+	};
 
 	void jpeg_read(std::string path, jfi_header* p)
 	{

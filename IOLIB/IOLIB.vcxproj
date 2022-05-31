@@ -149,6 +149,7 @@
     <ClInclude Include="color.h" />
     <ClInclude Include="core.h" />
     <ClInclude Include="db.h" />
+    <ClInclude Include="executor.h" />
     <ClInclude Include="file.h" />
     <ClInclude Include="format.h" />
     <ClInclude Include="gl.h" />

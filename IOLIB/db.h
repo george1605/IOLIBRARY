@@ -2,6 +2,7 @@
 #include "core.h"
 #include "file.h"
 #include "wsocket.h"
+#include "smath.h"
 #include <string>
 
 namespace io
@@ -52,10 +53,45 @@ namespace io
 		return std::vector<js_value> { js_value(0) };
 	}
 
+	class hash_str
+	{
+	private:
+		io::string _dont;
+		int mask;
+	public:
+		hash_str() {}
+		hash_str(io::string x)
+		{
+			_dont = x;
+		}
+		void hash()
+		{
+			mask = io::get_rand(time(nullptr)) & 0x2F;
+			io::do_xor((unsigned char*)_dont.addr(), mask); // 
+		}
+	};
+
 	class db_cred
 	{
-
+		io::string host;
+		io::string user;
+		io::hash_str pwd;
 	};
 
 	typedef std::vector<js_value> js_heap;
+
+	class db_file
+	{
+	private:
+		io::file fil;
+	public:
+		db_file(io::string name)
+		{
+			fil.open(name);
+		}
+		void query(io::string q) // does an SQL query
+		{
+
+		}
+	};
 }

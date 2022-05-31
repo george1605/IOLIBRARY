@@ -22,7 +22,7 @@ namespace io
 	{
 	protected:
 		char* p;
-		int Size = 0;
+		size_t Size = 0;
 	public:
 		buffer()
 		{

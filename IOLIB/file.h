@@ -8,6 +8,7 @@
 #else
 #include <fcntl.h>
 #include <unistd.h>
+#include <termios.h>
 #endif
 
 namespace io
@@ -28,20 +29,31 @@ namespace io
 			return std::fstream((FILE*)x);
 	}
 
-        void* mapfile(int fd, size_t size = 4096, void* ptr = nullptr)
-        {
-        #ifdef _UNIX_
-          return mmap(ptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-        #else
-          return malloc(size);
-        #endif
-        }
+	void* mapfile(int fd, size_t size = PAGE_SIZE, void* ptr = nullptr)
+	{
+#ifdef _UNIX_
+		return mmap(ptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+#else
+		return malloc(size);
+#endif
+	}
+
+	void unmapfile(void* ptr, size_t size)
+	{
+#ifdef _UNIX_
+		munmap(ptr, size);
+#else
+		if (ptr)
+			free(ptr);
+#endif
+	}
 
 	class file
 	{
 	private:
 		std::fstream fd[2];
 	public:
+		file() {}
 		file(int fd0, int fd1 = 1)
 		{
 			fd[0] = from_fd(fd0);
@@ -51,7 +63,7 @@ namespace io
 		}
 		file(const file& f)
 		{
-		
+
 		}
 		file(const char* fname)
 		{
@@ -70,6 +82,11 @@ namespace io
 		{
 			fd[1].write(x.c_str(), x.size());
 			return *this;
+		}
+		void open(io::string fname)
+		{
+			fd[0] = std::fstream(fname.addr(), std::fstream::in);
+			fd[1] = std::fstream(fname.addr(), std::fstream::out);
 		}
 	} stdio(0, 1);
 
@@ -112,7 +129,6 @@ namespace io
 
 		static std::string to_posix(std::string x)
 		{
-			
 		}
 	};
 
@@ -122,7 +138,7 @@ namespace io
 	public:
 		vfs()
 		{
-			
+
 		}
 		vfs(const char* root_name)
 		{
@@ -132,6 +148,49 @@ namespace io
 		{
 			root.add();
 			root.next->value = (long)fname;
+		}
+	};
+
+	struct term_cell
+	{
+		int X, Y;
+		char cnt; // current char
+	};
+
+	class terminal
+	{
+	private:
+#ifdef _WIN32
+		HANDLE console;
+#endif
+#ifdef __linux__
+		struct termios console;
+#endif
+	public:
+		int number = 0; // like TTYS0 
+		terminal()
+		{
+#ifdef _WIN32
+			console = GetStdHandle(STD_OUTPUT_HANDLE);
+#elif defined(__linux__)
+			tcgetattr(0, &console);
+#endif
+		}
+		terminal(int x)
+		{
+			number = x;
+		}
+
+		bool write(io::term_cell c)
+		{
+#ifdef _WIN32
+			COORD n = { c.X, c.Y };
+			DWORD err;
+			WriteConsoleOutputCharacterA(console, &c.cnt, 1, n, &err);
+			if (err == 0)
+				return false;
+			return true;
+#endif
 		}
 	};
 }

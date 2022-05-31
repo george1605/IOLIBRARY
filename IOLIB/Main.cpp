@@ -6,17 +6,17 @@
 
 void test_expect()
 {
-	io::buffer x(4);
-	io::expect<char> n(0);
-	n = x[5];
-	n.error().print();
+	io::string p = "1000";
+	p.reverse();
+	std::cout << p;
 }
 
 int main(int argc, char** argv)
 {
 	// uses system("pause")
-	io::fs::copy("C:\\Users\\George\\Desktop\\main.txt", "C:\\main.txt");
+	void* x = io::mapfile(1);
 	test_expect();
+	io::unmapfile(x, PAGE_SIZE);
 	io::pause();
 	return 0;
 }

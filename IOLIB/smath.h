@@ -97,6 +97,12 @@ namespace io
 	void do_xor (unsigned char bytes[], int mask)
 	{
 		for (int a = 0; bytes[a] != 0; a++)
+			bytes[a] = (unsigned char)(bytes[a] ^ mask);
+	}
+
+	void do_xor(char bytes[], int mask)
+	{
+		for (int a = 0; bytes[a] != 0; a++)
 			bytes[a] = (char)(bytes[a] ^ mask);
 	}
 }
