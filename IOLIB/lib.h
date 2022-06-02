@@ -1,4 +1,6 @@
 #pragma once
+// coding when listening to 
+// T3NZU - Polozhenie (Drive forever)
 #include <stdlib.h>
 #include <windows.h>
 #include "core.h"
@@ -18,6 +20,7 @@ namespace io
 #define USB_LIB "UsbTask.dll"
 #define SDL_LIB "SDL2.dll"
 #define GL_LIB "GLU.dll"
+#define JPEG_LIB "libjpeg-9.dll"
 #define LIB(x) "C:\\Windows\\System32\\" ## x
 	dlib loadlib(char* name)
 	{

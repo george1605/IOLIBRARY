@@ -64,4 +64,9 @@ namespace io
 		n.read((char*)x.Info, x.Length);
 	}
 
+	struct jpeg_matrix
+	{
+		char** ptr;
+		int X, Y;
+	};
 }

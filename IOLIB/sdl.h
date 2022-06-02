@@ -1,7 +1,6 @@
 // SDL wrapper
 #pragma once
 #include <SDL.h>
-#include <SDL_timer.h>
 #include "lib.h"
 #include "buffer.h"
 #define _CUSTOM
@@ -22,6 +21,22 @@ namespace io
 	bool has_sdl()
 	{
 		return loadlib((char*)LIB(SDL_LIB)) != nullptr;
+	}
+
+	bool has_jpeg()
+	{
+		return loadlib((char*)LIB(JPEG_LIB)) != nullptr;
+	}
+
+	void load_image(const char* name, int cx, int cy)
+	{
+		if (!has_jpeg())
+		{
+#ifdef _WIN32
+			LoadImageA(GetModuleHandle(NULL), (LPCSTR)name, IMAGE_ICON, cx, cy, LR_DEFAULTCOLOR | LR_DEFAULTSIZE);
+#endif
+		}
+
 	}
 
 	void* __sdl_alloc(size_t size)

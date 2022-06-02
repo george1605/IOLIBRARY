@@ -93,10 +93,16 @@
     <ClInclude Include="executor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="engine.h">
+      <Filter>Header Files\ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

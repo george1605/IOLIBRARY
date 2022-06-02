@@ -6,9 +6,7 @@
 
 void test_expect()
 {
-	io::string p = "1000";
-	p.reverse();
-	std::cout << p;
+	
 }
 
 int main(int argc, char** argv)
