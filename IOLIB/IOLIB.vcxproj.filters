@@ -96,6 +96,15 @@
     <ClInclude Include="engine.h">
       <Filter>Header Files\ui</Filter>
     </ClInclude>
+    <ClInclude Include="lightcore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ascii.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="avr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">

@@ -1,12 +1,13 @@
 #include "smath.h"
 #include "file.h"
-#include "mobile.h"
+#include "db.h"
 #include "sdl.h"
 #include "time.h"
 
 void test_expect()
 {
-	
+	io::sql_header n{ "One", "Two", "Three" };
+	io::print_header(n);
 }
 
 int main(int argc, char** argv)

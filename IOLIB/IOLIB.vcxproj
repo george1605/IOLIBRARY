@@ -79,7 +79,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>D:\repos\sdl\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\repos\IOLIB\IOLIB\lib;D:\repos\sdl\lib\x64;$(LibraryPath)</LibraryPath>
+    <LibraryPath>D:\repos\sdl\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -123,7 +123,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;GLU32.LIB;OPENGL32.LIB;GLAUX.LIB;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\repos\IOLIB\IOLIB\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -144,8 +144,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="arm.h" />
+    <ClInclude Include="ascii.h" />
     <ClInclude Include="asm.h" />
     <ClInclude Include="audio.h" />
+    <ClInclude Include="avr.h" />
     <ClInclude Include="buffer.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="core.h" />
@@ -159,6 +161,7 @@
     <ClInclude Include="irq.h" />
     <ClInclude Include="jpeg.h" />
     <ClInclude Include="lib.h" />
+    <ClInclude Include="lightcore.h" />
     <ClInclude Include="ml.h" />
     <ClInclude Include="mobile.h" />
     <ClInclude Include="sdl.h" />

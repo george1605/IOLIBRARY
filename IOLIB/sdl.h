@@ -16,6 +16,7 @@ namespace io
 	typedef SDL_Event sdlevt;
 	typedef SDL_Rect sdlrect;
 	typedef SDL_Thread sdlthrd;
+	typedef SDL_Renderer* sdlrender;
 	bool __sdl_init = false;
 
 	bool has_sdl()

@@ -6,6 +6,7 @@
 #include <string.h>
 #if _MSC_VER > 0
 #include <Windows.h>
+#include <shellapi.h>
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
@@ -150,10 +151,15 @@ namespace io
 			memcpy(this->ptr, x, p);
 		}
 
+		bool operator ==(const char* x)
+		{
+			return (strcmp(this->ptr, x) == 0);
+		}
+
 		void reverse()
 		{
 			char temp;
-			for (size_t i = 0; i <= Size / 2; i++)
+			for (size_t i = 0; i < Size / 2; i++)
 			{
 				temp = ptr[i];
 				ptr[i] = ptr[Size - i - 1];
@@ -176,6 +182,13 @@ namespace io
 #elif defined(_WIN32)
 
 #endif
+	}
+
+	template<typename T>
+	void mov_bits(T& s1, T& s2)
+	{
+		memmove(&s1, &s2, sizeof(T));
+		// people advise me not to use memcpy bc it's BAAAD!
 	}
 
 	std::ostream& operator << (std::ostream& o, io::string str)
@@ -544,6 +557,7 @@ namespace io
 	struct tbool
 	{
 		char value : 1;
+		char unused : 7;
 	};
 
 	class blockdev

@@ -73,6 +73,8 @@ namespace io
 
 	class db_cred
 	{
+	public:
+		db_cred() {}
 		io::string host;
 		io::string user;
 		io::hash_str pwd;
@@ -93,5 +95,78 @@ namespace io
 		{
 
 		}
+		void read(io::buffer& n)
+		{
+			fil.readbuf(n);
+		}
 	};
+
+	enum sql_type
+	{
+		INT,
+		DATE,
+		CHAR,
+		VARCHAR,
+		SET,
+		TEXT,
+		BLOB,
+		BINARY
+	};
+
+	class sql_value
+	{
+	private:
+		void* ptr;
+		size_t size;
+		sql_type type;
+	public:
+		sql_value() {}
+		sql_value(int& x) 
+		{
+			ptr = (void*)&x;
+			type = sql_type::INT;
+		}
+		sql_value(io::string x)
+		{
+			ptr = (void*)x.addr();
+			type = sql_type::VARCHAR;
+		}
+		bool is_int()
+		{
+			return (type == sql_type::INT);
+		}
+
+		void print()
+		{
+			if (ptr == nullptr)
+				return;
+			if (type == sql_type::INT)
+				std::cout << *(int*)ptr;
+			else if (type == sql_type::VARCHAR)
+				std::cout << ptr;
+		}
+	};
+
+	typedef std::vector<std::vector<sql_value>> sql_table;
+	typedef std::vector<std::vector<io::string>> sql_stable; // string table
+	typedef std::vector<io::string> sql_header;
+
+	void print_table(sql_stable n)
+	{
+		for (int a = 0; a < n.size(); a++)
+		{
+			for (int b = 0; b < n[a].size(); b++)
+				std::cout << n[a][b] << " ";
+			std::cout << '\n';
+		}
+	}
+
+	void print_header(sql_header hdr)
+	{
+		for (int a = 0; a < hdr.size(); a++)
+		{
+			std::cout << hdr[a] << " ";
+		}
+		std::cout << "\n--------------";
+	}
 }
