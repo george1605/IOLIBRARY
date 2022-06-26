@@ -86,7 +86,17 @@ namespace io
 				return io::expect<char>(io::exception(ENULLPTR));
 			return io::expect<char>(p[pos]);
 		}
+                char at(unsigned x)
+                {
+                        return ptr[x % Size];
+                }
+                void set(unsigned pos, char x)
+                {
+                        ptr[pos % Size] = x;
+                }
 	};
+
+        class list_buffer : llist {};
 
 	class lock_buffer : public buffer
 	{
