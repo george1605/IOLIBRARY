@@ -87,7 +87,7 @@ namespace io
 		string(size_t size)
 		{
 			ptr = (char*)malloc(size);
-			Alloc = true;
+                        Alloc = true;
 			Size = size;
 		}
 		string(size_t size, char x)
@@ -109,7 +109,7 @@ namespace io
 		}
 		bool empty()
 		{
-			return (ptr == nullptr);
+			return (ptr == nullptr || ptr[0] == 0);
 		}
 		void push(char c)
 		{
@@ -167,12 +167,18 @@ namespace io
 			}
 		}
 
-		string dup() // duplicate the string
+		io::string dup() // duplicate the string
 		{
-			io::string p(this->Size + 1, '\0');
+			io::string p(this->Size + 1);
 			memcpy(p.addr(), this->ptr, this->Size);
 			return p;
 		}
+
+                int find(char c)
+                {
+                   for(int i = 0;i < Size;i++)
+                     if(ptr[i] == c) return I;
+                }
 	};
 
 	void exec_syscall(size_t x, void* info)
