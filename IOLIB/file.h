@@ -16,6 +16,7 @@ namespace io
 #define FILE_ENT 1
 #define DIR_ENT 2
 #define DEV_ENT 4
+#define NULL_ENT 8
 
 	std::fstream from_fd(int x)
 	{
@@ -31,7 +32,7 @@ namespace io
 
 	void* mapfile(int fd, size_t size = PAGE_SIZE, void* ptr = nullptr)
 	{
-#ifdef _UNIX_
+#ifdef __unix__
 		return mmap(ptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
 #else
 		return malloc(size);
@@ -40,7 +41,7 @@ namespace io
 
 	void unmapfile(void* ptr, size_t size)
 	{
-#ifdef _UNIX_
+#ifdef __unix__
 		munmap(ptr, size);
 #else
 		if (ptr)
@@ -129,6 +130,9 @@ namespace io
 
 		static std::string to_posix(std::string x)
 		{
+                   for(int a = 0;a < x.size();a++)
+                     if(x[a] = '\\') x[a] = '/';
+                   return x;
 		}
 	};
 
