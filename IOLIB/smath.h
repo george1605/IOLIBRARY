@@ -82,6 +82,13 @@ namespace io
 		}
 	};
 
+        class vector3 : public vector2
+        {
+        public:
+           double z;
+           vector3(){}
+        };
+
 	std::ostream& operator << (std::ostream& x, vector2 n)
 	{
 		x << "(" << n.x << ", " << n.y << ")";
