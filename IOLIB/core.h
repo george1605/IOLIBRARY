@@ -100,16 +100,17 @@ namespace io
 		}
 		string(const char* p)
 		{
-			ptr = (char*)p;
+                        if(!p) p = (char*)malloc(5);
+			else ptr = (char*)p;
 		}
 		~string()
 		{
-			// if (ptr && this->Alloc) <- WHY THIS CAUSES EXCEPTION?
-			//	free(ptr);
+			if (ptr && this->Alloc) <- WHY THIS CAUSES EXCEPTION?
+		           free(ptr);
 		}
 		bool empty()
 		{
-			return (ptr == nullptr || ptr[0] == 0);
+			return (ptr[0] == 0);
 		}
 		void push(char c)
 		{
