@@ -1,5 +1,6 @@
 #pragma once
 #include "core.h"
+#include <memory>
 #ifdef _MSC_VRT
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -122,6 +123,14 @@ namespace io
 			locked = false;
 		}
 	};
+
+        class smart_buffer : unique_ptr<char> 
+        {
+        public:
+            smart_buffer() : unique_ptr(new char(10)){}
+            smart_buffer(size_t size) : unique_ptr(new char(size)){}
+            
+        };
 
 	void* os_alloc(int size, int type)
 	{
